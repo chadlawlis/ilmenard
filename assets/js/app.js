@@ -118,7 +118,7 @@ function createMap () {
 
   // props = feature.properties
   info.update = function (props) {
-    this._div.innerHTML = '<h4>Est. Max. On-Farm Storage Capacity</h4>' + (props ? props.owner + '<br><span style="color: #ef5641; font-weight: bold;">' + Number(props.max_volume_bushels).toLocaleString('en') + '</span> bushels*<br>' + Number(props.min_volume_bushels).toLocaleString('en') + ' bushels (min.)*<br>' + 'Grain bins: ' + props.silo_count + '<br><i><small>*assumes wide corrugation bins at max. / min. height for diameter</small></i>' : '<span style="color: #ef5641; font-weight: bold;">Hover</span> over a parcel<br>Overlay <span style="color: #ffcc00; font-weight: bold;">grain bins</span> from layer control');
+    this._div.innerHTML = '<h4>Est. Max. On-Farm Storage Capacity</h4>' + (props ? props.owner + '<br><span style="color: #ef5641; font-weight: bold;">' + Number(props.max_volume_bushels).toLocaleString('en') + '</span> bushels*<br>' + Number(props.min_volume_bushels).toLocaleString('en') + ' bushels (min.)*<br>' + 'Grain bins: <span style="color: #ffcc00; font-weight: bold;">' + props.silo_count + '</span><br><i><small>*assumes wide corrugation bins at max. / min. height for diameter</small></i>' : 'Menard County, IL<br><span style="color: #ef5641; font-weight: bold;">Hover</span> over a parcel<br>Overlay <span style="color: #ffcc00; font-weight: bold;">grain bins</span> from layer control');
   };
 
   info.addTo(map);
