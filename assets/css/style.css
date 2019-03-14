@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #map {
+  height: 100%;
+  width: 100%;
+}
+
+/* set font-awesome icon color (includes zoomehome icon) to match rest of page */
+.fa, .fas {
+  color: #333D47;
+}
+
+/* set font color for all leaflet containers */
+.leaflet-container {
+  color: #333D47;
+}
+
+.leaflet-popup-content-wrapper {
+  /* fallback background precedes background */
+  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  /* fallback border precedes border */
+  border: 2px solid black;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); */
+  color: #333D47;
+}
+
+.leaflet-popup-content p {
+  font: 16px/22px Arial, Helvetica, sans-serif;
+  margin: 0.1em 0;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle {
+  /* width and height default to 44px */
+  height: 30px;
+  width: 30px;
+}
+
+.leaflet-retina .leaflet-control-layers-toggle {
+  /* background-size defaults to 28px 28px */
+  background-size: 22px 22px;
+}
+
+.info {
+    /* fallback background precedes background */
+    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    /* fallback border precedes border */
+    border: 2px solid black;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    font: 16px/22px Arial, Helvetica, sans-serif;
+    padding: 10px;
+}
+.info h4 {
+    color: #333D47;
+    margin: 0 0 5px;
+}
+
+.legend {
+    color: #333D47;
+    line-height: 20px;
+}
+.legend i {
+    float: left;
+    height: 20px;
+    margin-right: 8px;
+    opacity: 0.7;
+    width: 20px;
+}
