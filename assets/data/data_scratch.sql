@@ -58,10 +58,10 @@ where farm_land is not null and farm_land <> '0' and (farm_acres is null or farm
 -- only 2 records where farm_acres is null or 0 and farm_land is not null and not '0'
 -- ultimately, silos do not overlap these 2 parcels so no need for major concern
 
--- found the zoning/GIS website for Menard County, IL: http://menardcountyil.com/departments/zoning-gis/
--- and did some digging around zoning/tax codes: http://menardcountyil.org/files/7515/2950/7624/Ordinance_Modified_06.12.18.pdf
--- along with the parcel map viewer: http://mencoilgis.maps.arcgis.com/apps/webappviewer/index.html?id=bc642e2233714b198e073bd1adf934f5
--- and its metadata: http://mencoilgis.maps.arcgis.com/home/item.html?id=bc642e2233714b198e073bd1adf934f5
+-- found the zoning/GIS website for Menard County, IL: https://menardcountyil.com/departments/zoning-gis/
+-- and did some digging around zoning/tax codes: https://menardcountyil.org/files/7515/2950/7624/Ordinance_Modified_06.12.18.pdf
+-- along with the parcel map viewer: https://mencoilgis.maps.arcgis.com/apps/webappviewer/index.html?id=bc642e2233714b198e073bd1adf934f5
+-- and its metadata: https://mencoilgis.maps.arcgis.com/home/item.html?id=bc642e2233714b198e073bd1adf934f5
 -- but unable to glean significant information re: determining agricultural land use beyond the attributes already identified
 
 -- next, considered possible logic around establishing a threshold for a parcel's farm_acres as a percentage of gross_acres
@@ -273,7 +273,7 @@ from silos_ilmenard;
 -- including wide bin diameter and associated volume attributes for popups
 with p as
 (select owner, st_union(geom) as geom from parcels_ilmenard where farm_acres > 0 group by owner)
-select 
+select
 	s.gid,
 	round(diameter, 1) as diameter,
 	case
@@ -396,4 +396,3 @@ select
 from s, p
 where st_contains(p.geom, st_centroid(s.geom)) = 'True'
 group by owner, parcel_numbers, p.geom;
-
