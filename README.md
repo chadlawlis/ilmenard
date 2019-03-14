@@ -63,7 +63,7 @@
       - parameters, in order: PostgreSQL relation to sync to CARTO, CARTO table to sync with
       - note: ogr2ogr automatically runs in `-append` mode; use `postgres_carto_overwrite.sh` to run in `-overwrite` mode or use `truncate_carto.sh` to truncate before synching
       - note: CARTO API Key removed from uploaded scripts
-9. Refresh materialized views to incorporate new silos, as available, via:
+9. Refresh materialized views to incorporate new silos added to `silos_ilmenard` and/or updated parcel attributes in `parcels_ilmenard` via:
   - `REFRESH MATERIALIZED VIEW silos`
   - `REFRESH MATERIALIZED VIEW parcels`
 
