@@ -14,11 +14,11 @@
 -- two attributes available: parcelnumb, parcel_num
 
 -- review parcel_num first:
-select parcel_num, count(*) as count from parcels_ilmenard group by parcel_num having count(*) > 1 order by count(*), parcel_num desc;
+select parcel_num, count(*) as count from parcels_ilmenard group by parcel_num having count(*) > 1 order by count(*) desc, parcel_num;
 -- 113 NULL, 4 instances of 2 records sharing the same value (parcel_num)
 
 -- review parcelnumb to compare:
-select parcelnumb, count(*) as count from parcels_ilmenard group by parcelnumb having count(*) > 1 order by count(*), parcelnumb desc;
+select parcelnumb, count(*) as count from parcels_ilmenard group by parcelnumb having count(*) > 1 order by count(*) desc, parcelnumb;
 -- 0 NULL, 83 'U/I', same 4 instances of 2 records sharing the same value (parcelnumb)
 
 -- further review the difference between 113 NULL parcel_num while only 83 'U/I' parcelnumb:
