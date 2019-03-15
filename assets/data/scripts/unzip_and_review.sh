@@ -4,7 +4,7 @@
 DATA=$(cd ../; pwd)
 
 # unzip contents to ilmenard/assets/data/ directory
-# -o maintains last modified time of the files inside the zip; -d specifies directory to extract to
+# -o maintains last modified date/time of the files inside the zip; -d specifies directory to extract to
 for ZIP in $DATA/*.zip
 do
 	printf "\n~~ unzipping $ZIP ~~\n\n"

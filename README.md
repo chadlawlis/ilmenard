@@ -58,13 +58,15 @@
     - indexing `parcels_ilmenard`
     - aggregate materialized view `silos` for use in map
     - aggregate materialized view `parcels` for use in map
-8. Return to terminal in `./assets/data/scripts` directory to sync `silos` and `parcels` materialized views to CARTO via:
+8. Execute `data_prod.sql` to create GiST index on `parcels_ilmenard` and create materialized views for `silos` and `parcels` via:
+  - `\i data_prod.sql`
+9. Return to terminal in `./assets/data/scripts` directory to sync `silos` and `parcels` materialized views to CARTO via:
   - `$ sh postgres_carto_sync.sh silos silos`
   - `$ sh postgres_carto_sync.sh parcels parcels`
       - parameters, in order: Postgres relation to sync to CARTO, CARTO table to sync with
       - note: ogr2ogr automatically runs in `-append` mode; use `postgres_carto_overwrite.sh` to run in `-overwrite` mode or use `truncate_carto.sh` to truncate before synching
       - note: CARTO API Key removed from uploaded scripts here for privacy
-9. Refresh materialized views to incorporate new silos added to `silos_ilmenard` and/or updated parcel attributes in `parcels_ilmenard` via:
+10. Refresh materialized views to incorporate new silos added to `silos_ilmenard` and/or updated parcel attributes in `parcels_ilmenard` via:
   - `REFRESH MATERIALIZED VIEW silos`
   - `REFRESH MATERIALIZED VIEW parcels`
 

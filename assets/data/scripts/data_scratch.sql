@@ -14,11 +14,11 @@
 -- two attributes available: parcelnumb, parcel_num
 
 -- review parcel_num first:
-select parcel_num, count(*) as count from parcels_ilmenard group by parcel_num having count(*) > 1;
+select parcel_num, count(*) as count from parcels_ilmenard group by parcel_num having count(*) > 1 order by count(*), parcel_num desc;
 -- 113 NULL, 4 instances of 2 records sharing the same value (parcel_num)
 
 -- review parcelnumb to compare:
-select parcelnumb, count(*) as count from parcels_ilmenard group by parcelnumb having count(*) > 1;
+select parcelnumb, count(*) as count from parcels_ilmenard group by parcelnumb having count(*) > 1 order by count(*), parcelnumb desc;
 -- 0 NULL, 83 'U/I', same 4 instances of 2 records sharing the same value (parcelnumb)
 
 -- further review the difference between 113 NULL parcel_num while only 83 'U/I' parcelnumb:
@@ -51,17 +51,41 @@ order by parcel_num;
 -- two attributes immediately come to mind: farm_acres, farm_land
 -- farm_acres is numeric, while farm_land is a string, suggesting farm_land may be related to zoning or tax code
 
--- compare:
-select parcel_num, parcelnumb, gross_acre, farm_acres, farm_land, tax_code, owner1_id, owner, owner2_id, owner2_nam, owner3_id, owner3_nam, legal, address, site_csz, township_n, township
+-- other farm-related attributes may also be relevant: non_farm_l, farm_build, non_farm_b
+-- other tax-related attributes may also be relevant: tax_code, tax_status, legal
+-- including these for comparison in query below
+
+-- compare potential attributes
+-- query where farm_acres is null or 0 and farm_land is not null and not '0' (potentially indicating land zoned for farming but not yet developed)
+select parcelnumb, gross_acre, farm_acres, farm_land, non_farm_l, farm_build, non_farm_b, tax_code, tax_status, legal, owner1_id, owner, owner2_id, owner2_nam, owner3_id, owner3_nam, address, site_csz, township_n, township
 from parcels_ilmenard
 where farm_land is not null and farm_land <> '0' and (farm_acres is null or farm_acres = 0);
 -- only 2 records where farm_acres is null or 0 and farm_land is not null and not '0'
 -- ultimately, silos do not overlap these 2 parcels so no need for major concern
 
--- found the zoning/GIS website for Menard County, IL: https://menardcountyil.com/departments/zoning-gis/
--- and did some digging around zoning/tax codes: https://menardcountyil.org/files/7515/2950/7624/Ordinance_Modified_06.12.18.pdf
--- along with the parcel map viewer: https://mencoilgis.maps.arcgis.com/apps/webappviewer/index.html?id=bc642e2233714b198e073bd1adf934f5
--- and its metadata: https://mencoilgis.maps.arcgis.com/home/item.html?id=bc642e2233714b198e073bd1adf934f5
+-- reverse the query, where farm_land is null or '0' and farm_acres is not null and not 0
+select parcelnumb, gross_acre, farm_acres, farm_land, non_farm_l, farm_build, non_farm_b, tax_code, tax_status, legal, owner1_id, owner, owner2_id, owner2_nam, owner3_id, owner3_nam, address, site_csz, township_n, township
+from parcels_ilmenard
+where farm_acres is not null and farm_acres <> 0 and (farm_land is null or farm_land = '0');
+
+select count(*)
+from parcels_ilmenard
+where farm_acres is not null and farm_acres <> 0 and (farm_land is null or farm_land = '0');
+-- 21 records where farm_land is null or '0' and farm_acres is not null and not 0
+-- seems to indicate that farm_acres may be the better indicator of agricultural land use
+
+-- quick look at tax_code and tax_status to see if of any help:
+select count(distinct tax_code) from parcels_ilmenard where farm_acres is not null and farm_acres <> 0;
+-- 76 tax codes where farm_acres is not null and <> 0
+select count(distinct tax_status) from parcels_ilmenard where farm_acres is not null and farm_acres <> 0;
+-- 2 tax statuses where farm_acres is not null and <> 0
+select distinct tax_status from parcels_ilmenard where farm_acres is not null and farm_acres <> 0;
+-- tax statuses: 'T' or 'E'
+
+-- found the zoning/GIS website for Menard County, IL: http://menardcountyil.com/departments/zoning-gis/
+-- and did some digging around zoning/tax codes: http://menardcountyil.org/files/7515/2950/7624/Ordinance_Modified_06.12.18.pdf
+-- along with the parcel map viewer: http://mencoilgis.maps.arcgis.com/apps/webappviewer/index.html?id=bc642e2233714b198e073bd1adf934f5
+-- and its metadata: http://mencoilgis.maps.arcgis.com/home/item.html?id=bc642e2233714b198e073bd1adf934f5
 -- but unable to glean significant information re: determining agricultural land use beyond the attributes already identified
 
 -- next, considered possible logic around establishing a threshold for a parcel's farm_acres as a percentage of gross_acres
@@ -76,7 +100,8 @@ order by parcel_num;
 -- like above, silos do not overlap these 2 parcels so no need for major concern
 -- logically speaking, presence of farm_acres is likely to indicate parcel agricultural use anyway
 
--- after comparing farm_acres and farm_land and lacking any specificity re: zoning/tax codes, moving forward with using "farm_acres > 0" as indication of agricultural parcel
+-- after comparing farm_acres and farm_land and lacking any specificity re: zoning/tax codes:
+-- moving forward with using "farm_acres > 0" as indication of agricultural parcel
 
 
 ----------------------
@@ -112,8 +137,13 @@ select count(*) from parcels_ilmenard where owner is not null; --11,839
 select count(*) from parcels_ilmenard where owner2_nam is not null; --628
 select count(*) from parcels_ilmenard where owner3_nam is not null; --74
 
--- reviewing records in the AGOL parcel viewer in which owner and owner2_nam and/or owner3_nam are populated yields no further clarification re: attribution selection logic
--- lacking any further claritiy re: owner attribute selection logic, moving forward with "owner" as attribute on which to aggregate parcels by ownership
+-- query parcels with values for all three owner names and review in AGOL parcel viewer:
+select parcelnumb, owner1_id, owner, owner2_id, owner2_nam, owner3_id, owner3_nam from parcels_ilmenard where owner is not null and owner2_nam is not null and owner3_nam is not null limit 10;
+-- first parcel, '07-09-400-001', displays "owner" as owner even though owner2_nam and owner3_nam are populated
+
+-- reviewing more records in the AGOL parcel viewer in which owner and owner2_nam and/or owner3_nam are populated yields no further clarification re: attribution selection logic
+-- lacking any further claritiy re: owner attribute selection logic:
+-- moving forward with "owner" as attribute on which to aggregate parcels by ownership
 
 -- (note: ideally would create pick-list table of unique owner names, to assign each a valid unique id, and use FK to unique id when assigning ownership in parcels table)
 
