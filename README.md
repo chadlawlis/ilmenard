@@ -60,6 +60,7 @@
     - aggregate materialized view `parcels` for use in map
 8. Execute `data_prod.sql` to create GiST index on `parcels_ilmenard` and create materialized views for `silos` and `parcels` via:
   - `\i data_prod.sql`
+    - note: CREATE INDEX on `parcels_ilmenard` should be commented out or altered for new table if running multiple times
 9. Return to terminal in `./assets/data/scripts` directory to sync `silos` and `parcels` materialized views to CARTO via:
   - `$ sh postgres_carto_sync.sh silos silos`
   - `$ sh postgres_carto_sync.sh parcels parcels`
