@@ -96,6 +96,7 @@ function createMap () {
   }
 
   // Bind popup to silo features when clicked
+  // Use "Number().toLocaleString('en');" to display integer as comma-separated string (simply aesthetic)
   function siloPopup (feature, layer) {
     var props = feature.properties;
     var popupContent = '';
@@ -117,6 +118,7 @@ function createMap () {
   };
 
   // props = feature.properties
+  // Use "Number().toLocaleString('en');" to display integer as comma-separated string (simply aesthetic)
   info.update = function (props) {
     this._div.innerHTML = '<h4>Est. Max. On-Farm Storage Capacity</h4>' + (props ? props.owner + '<br><span style="color: #ef5641; font-weight: bold;">' + Number(props.max_volume_bushels).toLocaleString('en') + '</span> bushels*<br>' + Number(props.min_volume_bushels).toLocaleString('en') + ' bushels (min.)*<br>' + 'Grain bins: <span style="color: #ffcc00; font-weight: bold;">' + props.silo_count + '</span><br><i><small>*assumes wide corrugation bins at max. / min. height for diameter</small></i>' : 'Menard County, IL<br><span style="color: #ef5641; font-weight: bold;">Hover</span> over a parcel<br>Overlay <span style="color: #ffcc00; font-weight: bold;">grain bins</span> from layer control');
   };
@@ -206,6 +208,7 @@ function createMap () {
     var grades = [9126, 51193, 91285, 170860, 268210];
 
     // Loop through volume intervals and generate label with a colored square for each
+    // Use "Number().toLocaleString('en');" to display integer as comma-separated string (simply aesthetic)
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + Number(grades[i]).toLocaleString('en') + (grades[i + 1] ? ' &ndash; ' + Number(grades[i + 1]).toLocaleString('en') + '<br>' : ' +');
     }
