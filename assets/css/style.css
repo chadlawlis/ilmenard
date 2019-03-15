@@ -23,7 +23,7 @@ html, body, #map {
   background: white;
   background: rgba(255, 255, 255, 0.9);
   /* fallback border precedes border */
-  border: 2px solid black;
+  border: 2px solid gray;
   border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); */
@@ -51,7 +51,7 @@ html, body, #map {
     background: white;
     background: rgba(255, 255, 255, 0.9);
     /* fallback border precedes border */
-    border: 2px solid black;
+    border: 2px solid gray;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
