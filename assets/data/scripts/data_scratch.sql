@@ -422,7 +422,7 @@ select
 	count(*) as silo_count,
 	sum(max_volume_bushels) as max_volume_bushels,
 	sum(min_volume_bushels) as min_volume_bushels,
-	p.geom::geometry(MultiPolygon,4326) --specify geometry type + SRS (which avoids specifying source SRS via "-s_srs" when exporting via ogr2ogr)
+	p.geom --requires another level of CTE/subquery to specify geometry type (as specified in silos query above via ::geometry(MultiPolygon,4326)) in order to avoid mismatching types Polygon vs. MultiPolygon before vs. after ST_Union on group by owner
 from s, p
 where st_contains(p.geom, st_centroid(s.geom)) = 'True'
 group by owner, parcel_numbers, p.geom;
