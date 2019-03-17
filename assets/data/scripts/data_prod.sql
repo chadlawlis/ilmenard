@@ -32,7 +32,7 @@ CREATE INDEX parcels_ilmenard_geom_gist_index ON parcels_ilmenard USING GIST (ge
 create materialized view silos as
 with p as
 (select owner, st_union(geom) as geom from parcels_ilmenard where farm_acres > 0 group by owner)
-select 
+select
 	s.gid,
 	round(diameter, 1) as diameter,
 	case
@@ -72,7 +72,7 @@ select
 		when 13.7 <= round(diameter, 1) and round(diameter, 1) <= 20.0 then 28907
 	end as min_volume_bushels,
 	owner,
-	s.geom
+	s.geom::geometry(MultiPolygon,4326) --specify geometry type + SRS (which avoids specifying source SRS via "-s_srs" when exporting via ogr2ogr)
 from silos_ilmenard s, p
 where st_contains(p.geom, st_centroid(s.geom)) = 'True';
 
@@ -143,8 +143,7 @@ select
 	count(*) as silo_count,
 	sum(max_volume_bushels) as max_volume_bushels,
 	sum(min_volume_bushels) as min_volume_bushels,
-	p.geom
+	p.geom::geometry(MultiPolygon,4326) --specify geometry type + SRS (which avoids specifying source SRS via "-s_srs" when exporting via ogr2ogr)
 from s, p
 where st_contains(p.geom, st_centroid(s.geom)) = 'True'
 group by owner, parcel_numbers, p.geom;
-
